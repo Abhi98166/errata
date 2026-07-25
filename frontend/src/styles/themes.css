@@ -1,0 +1,126 @@
+
+:root {
+  --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "SF Mono", Menlo, monospace;
+
+  --radius: 10px;
+  --measure: 62ch;
+
+  --bg: #fbf7ef;
+  --surface: #ffffff;
+  --text: #1a1714;
+  --dim: #a9a096;
+  --faint: #d9d2c7;
+  --accent: #f0a202;
+  --correct: #1a1714;
+  --error: #c62828;
+  --error-bg: #fbe3e3;
+  --cursor: #f0a202;
+
+  --font-passage: var(--font-mono);
+  --passage-size: 1.375rem;
+  --passage-line: 2.1;
+  --passage-spacing: 0.01em;
+
+  --transition: 140ms;
+  --easing: cubic-bezier(0.2, 0.9, 0.3, 1);
+  --cursor-anim: blink 1.05s steps(2, start) infinite;
+
+  --vignette: none;
+  --grain-opacity: 0;
+}
+
+[data-genre="horror"] {
+  --bg: #08090a;
+  --surface: #0e1012;
+  --text: #c8ccc9;
+  --dim: #3a4044;
+  --faint: #1c2124;
+  --accent: #7a2020;
+  --correct: #e6e9e6;
+  --error: #b83232;
+  --error-bg: #240d0d;
+  --cursor: #8f2222;
+
+  --passage-size: 1.3rem;
+  --passage-line: 2.3;
+  --passage-spacing: 0.02em;
+
+  --transition: 420ms;
+  --easing: cubic-bezier(0.4, 0, 0.2, 1);
+  --cursor-anim: pulse 2.4s ease-in-out infinite;
+
+  --vignette: radial-gradient(
+    ellipse at center,
+    transparent 32%,
+    rgba(0, 0, 0, 0.82) 100%
+  );
+  --grain-opacity: 0.05;
+}
+
+[data-genre="romantic"] {
+  --bg: #fdf6f2;
+  --surface: #fffaf7;
+  --text: #3a2b2b;
+  --dim: #c7ada4;
+  --faint: #ecd9d1;
+  --accent: #c26a72;
+  --correct: #2f2222;
+  --error: #b3363f;
+  --error-bg: #f8e0e2;
+  --cursor: #c26a72;
+
+  --font-passage: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --passage-size: 1.5rem;
+  --passage-line: 2.0;
+  --passage-spacing: 0.005em;
+
+  --transition: 300ms;
+  --easing: cubic-bezier(0.33, 1, 0.68, 1);
+  --cursor-anim: blink 1.6s ease-in-out infinite;
+
+  --vignette: none;
+  --grain-opacity: 0;
+}
+
+[data-genre="poetic"] {
+  --bg: #14161a;
+  --surface: #1a1d22;
+  --text: #b6bcc6;
+  --dim: #4b525d;
+  --faint: #262b32;
+  --accent: #7f9bb5;
+  --correct: #e4e9f0;
+  --error: #d98a6a;
+  --error-bg: #2a1d16;
+  --cursor: #7f9bb5;
+
+  --font-passage: "Iowan Old Style", Georgia, "Times New Roman", serif;
+  --passage-size: 1.6rem;
+  --passage-line: 2.4;
+  --passage-spacing: 0.015em;
+  --measure: 54ch;
+
+  --transition: 260ms;
+  --easing: cubic-bezier(0.4, 0, 0.2, 1);
+  --cursor-anim: blink 1.4s ease-in-out infinite;
+
+  --vignette: none;
+  --grain-opacity: 0.03;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition: 0ms;
+    --cursor-anim: none;
+    --vignette: none;
+    --grain-opacity: 0;
+  }
+}
+
+[data-reduced-motion="true"] {
+  --transition: 0ms;
+  --cursor-anim: none;
+  --vignette: none;
+  --grain-opacity: 0;
+}
