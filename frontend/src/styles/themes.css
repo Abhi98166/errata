@@ -32,15 +32,15 @@
 
 [data-genre="horror"] {
   --bg: #08090a;
-  --surface: #0e1012;
-  --text: #c8ccc9;
-  --dim: #3a4044;
-  --faint: #1c2124;
-  --accent: #7a2020;
-  --correct: #e6e9e6;
-  --error: #b83232;
-  --error-bg: #240d0d;
-  --cursor: #8f2222;
+  --surface: #101315;
+  --text: #ced2cf;
+  --dim: #7c8588;
+  --faint: #2a3135;
+  --accent: #bf4038;
+  --correct: #eaeeea;
+  --error: #d1554c;
+  --error-bg: #2a1210;
+  --cursor: #cf4a3e;
 
   --passage-size: 1.3rem;
   --passage-line: 2.3;
@@ -107,6 +107,11 @@
 
   --vignette: none;
   --grain-opacity: 0.03;
+}
+
+:root,
+[data-genre] {
+  --muted: color-mix(in srgb, var(--text) 68%, var(--bg));
 }
 
 @media (prefers-reduced-motion: reduce) {
