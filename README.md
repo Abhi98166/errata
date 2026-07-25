@@ -17,27 +17,28 @@ Two processes. The backend needs Python 3.12+, the frontend needs Node 20+.
 # backend
 cd backend
 python -m venv .venv
-.venv/Scripts/python -m pip install -r requirements.txt   # .venv/bin/python on unix
-cp .env.example .env                                      # add a Gemini key, or don't
-.venv/Scripts/python -m uvicorn app.main:app --reload
+source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
+python -m uvicorn app.main:app --reload
 
 # frontend, in another terminal
 cd frontend
 npm install
-npm run dev          # http://localhost:5173, proxies /api to the backend
+npm run dev
 ```
 
 **It runs with no API key.** Without one, `StubLLMClient` serves built-in
 passages so the entire loop -- typing, analysis, profile, plan, drills -- works
 offline. Add `ERRATA_GEMINI_API_KEY` to `.env` for real generated prose.
 
-Note that older Gemini model ids such as `gemini-2.5-flash` are no longer
-available to newly created API keys. The default is `gemini-3.5-flash-lite`,
-which is cheap and does not spend output tokens on thinking.
+## Tests
+
+With the venv active:
 
 ```bash
-cd backend && .venv/Scripts/python -m pytest      # 63 tests
-cd frontend && npm run build                      # typecheck + build
+cd backend && python -m pytest    # 63 tests
+cd frontend && npm run build      # typecheck + build
 ```
 
 ## Checking what the LLM is doing
@@ -46,7 +47,7 @@ Every call logs the request, timing, token counts, finish reason and a preview
 of the text. Two things help when it looks wrong:
 
 ```bash
-.venv/Scripts/python check_llm.py horror 60    # raw output, normalised, verdict
+python check_llm.py horror 60                  # raw output, normalised, verdict
 curl http://127.0.0.1:8000/api/debug/corpus    # what is in the pool and who wrote it
 ```
 
