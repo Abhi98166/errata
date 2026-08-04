@@ -16,6 +16,16 @@ class Finding:
     evidence: dict = field(default_factory=dict)
 
 
+@dataclass
+class NearMiss:
+    pair: str
+    expected: str
+    actual: str
+    count: float
+    attempts: float
+    reason: str
+
+
 def _confidence(attempts: float, full: float = 60.0) -> float:
     return min(1.0, attempts / full)
 
@@ -172,6 +182,43 @@ def find_weak_fingers(prof: dict) -> list[Finding]:
         )
 
     return findings
+
+
+MAX_NEAR_MISSES = 2
+
+
+def find_near_misses(prof: dict, reported: list[Finding]) -> list[NearMiss]:
+    keys = prof.get("keys", {})
+    spoken = {c for f in reported for t in f.targets for c in t}
+
+    misses: list[NearMiss] = []
+    for pair, count in prof.get("confusion", {}).items():
+        expected, _, actual = pair.partition(">")
+        if not expected or not actual or expected in spoken:
+            continue
+
+        attempts = keys.get(expected, {}).get("attempts", 0)
+
+        if count < profile_mod.MIN_CONFUSION_COUNT:
+            reason = "count"
+        elif attempts < profile_mod.MIN_KEY_ATTEMPTS:
+            reason = "attempts"
+        else:
+            continue
+
+        misses.append(
+            NearMiss(
+                pair=pair,
+                expected=expected,
+                actual=actual,
+                count=round(count, 1),
+                attempts=round(attempts, 1),
+                reason=reason,
+            )
+        )
+
+    misses.sort(key=lambda m: (m.count, m.attempts), reverse=True)
+    return misses[:MAX_NEAR_MISSES]
 
 
 def build_findings(prof: dict) -> list[Finding]:

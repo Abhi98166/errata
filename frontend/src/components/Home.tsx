@@ -1,33 +1,14 @@
 import { useEffect } from "react";
 
+import { GENRE_ORDER, type Lexicon } from "../lib/lexicon";
 import type { Genre, Plan, UserConfig } from "../lib/types";
+import { Brand, Frame } from "./Frame";
 import { HeroSpecimen } from "./HeroSpecimen";
 
-const DURATIONS = [
-  { seconds: 60, label: "1 min", words: "120 words" },
-  { seconds: 180, label: "3 min", words: "320 words" },
-  { seconds: 300, label: "5 min", words: "520 words" },
-];
-
-const STEPS = [
-  {
-    n: "01",
-    title: "Choose a voice",
-    body: "A model writes you something new in that mood. Palette, typeface, motion and keypress sound shift with it.",
-  },
-  {
-    n: "02",
-    title: "Type it badly",
-    body: "Every keystroke is timestamped and scored on the server -- confusions, bigrams, fingers, rows, hesitations.",
-  },
-  {
-    n: "03",
-    title: "Get a correction plan",
-    body: "Ranked findings become drills: passages deliberately saturated with the exact letters you keep fumbling.",
-  },
-];
+const DURATIONS = [60, 180, 300];
 
 interface Props {
+  lex: Lexicon;
   genres: Genre[];
   config: UserConfig;
   plan: Plan | null;
@@ -38,7 +19,14 @@ interface Props {
   onOpenPlan: () => void;
 }
 
+function ordered(genres: Genre[]): Genre[] {
+  return [...genres].sort(
+    (a, b) => GENRE_ORDER.indexOf(a.id) - GENRE_ORDER.indexOf(b.id),
+  );
+}
+
 export function Home({
+  lex,
   genres,
   config,
   plan,
@@ -66,51 +54,53 @@ export function Home({
   }, [busy, onStart]);
 
   return (
-    <div className="stage stage--home">
-      <header className="masthead">
-        <div className="brand">
-          err<b>a</b>ta
-        </div>
-        <span className="pill">
-          <i className="pill__dot" />
-          runs offline
-        </span>
-      </header>
-
+    <Frame variant="home" left={<Brand />} right={lex.masthead}>
       {nextDrill && (
         <div className="resume">
           <div>
-            <p className="resume__eyebrow">
-              correction plan &middot; drill {nextDrill.rank} of {plan!.drills.length}
+            <p className="kicker kicker--accent">
+              {lex.resume.label} {nextDrill.rank} / {plan!.drills.length}
             </p>
             <p className="resume__text">{nextDrill.diagnosis}</p>
           </div>
           <button className="btn btn--ghost" onClick={onOpenPlan}>
-            Continue
+            {lex.resume.action}
           </button>
         </div>
       )}
 
       <section className="hero">
         <div>
+          {lex.hero.kicker && <p className="kicker">{lex.hero.kicker}</p>}
+
           <h1 className="hero__title">
-            The keys you miss are the <em>whole point</em>.
+            {lex.hero.titleLead}
+            <br />
+            {lex.hero.titleJoin} <span className="hero__emph">{lex.hero.titleEmph}</span>
+            {lex.hero.titleEnd}
           </h1>
-          <p className="hero__lede">
-            Most typing apps hand you a number and wish you luck. errata writes you a
-            passage worth reading, records every mistake down to the keystroke, and
-            turns the letters you keep fumbling into drills built to fix them.
-          </p>
+
+          <p className="hero__lede">{lex.hero.lede}</p>
+
           <ul className="hero__facts">
-            <li>Keystroke-level error profile, not a WPM score</li>
-            <li>Four moods, each with its own palette, type and sound</li>
-            <li>Scored on the server &mdash; the client cannot flatter you</li>
+            {lex.hero.facts.map((fact, i) => (
+              <li key={fact}>
+                <span className="hero__mark">{lex.hero.marks[i]}</span>
+                {fact}
+              </li>
+            ))}
           </ul>
+
+          {lex.hero.stamp && (
+            <div className="hero__stamp">
+              <span className="stamp">{lex.hero.stamp}</span>
+            </div>
+          )}
         </div>
 
         {selected && (
           <HeroSpecimen
-            label={selected.label}
+            lex={lex}
             text={selected.blurb}
             still={config.reduced_motion}
           />
@@ -118,9 +108,9 @@ export function Home({
       </section>
 
       <div className="steps">
-        {STEPS.map((step) => (
-          <div className="step" key={step.n}>
-            <span className="step__n">{step.n}</span>
+        {lex.steps.map((step) => (
+          <div className="step" key={step.kicker}>
+            <span className="kicker kicker--accent">{step.kicker}</span>
             <h2 className="step__title">{step.title}</h2>
             <p className="step__body">{step.body}</p>
           </div>
@@ -129,54 +119,54 @@ export function Home({
 
       <section className="section">
         <div className="section__head">
-          <p className="eyebrow">pick a mood</p>
-          <span className="section__rule" />
-          <span className="section__aside">the whole app follows</span>
+          <p className="kicker">{lex.picker.label}</p>
+          <span className="rule" />
+          <span className="section__aside">{lex.picker.aside}</span>
         </div>
 
         <div className="cards">
-          {genres.map((genre) => (
-            <button
-              key={genre.id}
-              className="card"
-              data-genre={genre.id}
-              aria-pressed={config.genre === genre.id}
-              onClick={() => onChange({ genre: genre.id })}
-            >
-              <span className="card__top">
-                <i className="card__dot" />
+          {ordered(genres).map((genre) => {
+            const active = config.genre === genre.id;
+            return (
+              <button
+                key={genre.id}
+                className="card"
+                data-card={genre.id}
+                aria-pressed={active}
+                onClick={() => onChange({ genre: genre.id })}
+              >
                 <span className="card__label">{genre.label}</span>
-              </span>
-              <span className="card__blurb">{genre.blurb}</span>
-              <span className="card__specimen">
-                <span className="card__aa">Aa</span>
-                <span className="card__swatches">
-                  <i className="card__swatch card__swatch--bg" />
-                  <i className="card__swatch card__swatch--accent" />
-                  <i className="card__swatch card__swatch--ink" />
+                <span className="card__blurb">{genre.blurb}</span>
+                <span className="card__foot">
+                  <span className="card__aa">Aa</span>
+                  {active ? (
+                    <span className="card__state">{lex.picker.selected}</span>
+                  ) : (
+                    <i className="card__dot" />
+                  )}
                 </span>
-              </span>
-            </button>
-          ))}
+              </button>
+            );
+          })}
         </div>
       </section>
 
       <section className="section">
         <div className="section__head">
-          <p className="eyebrow">how long</p>
-          <span className="section__rule" />
+          <p className="kicker">{lex.duration.label}</p>
+          <span className="rule" />
         </div>
 
         <div className="tiles">
-          {DURATIONS.map((option) => (
+          {DURATIONS.map((seconds, i) => (
             <button
-              key={option.seconds}
+              key={seconds}
               className="tile"
-              aria-pressed={config.duration === option.seconds}
-              onClick={() => onChange({ duration: option.seconds })}
+              aria-pressed={config.duration === seconds}
+              onClick={() => onChange({ duration: seconds })}
             >
-              <span className="tile__label">{option.label}</span>
-              <span className="tile__sub">{option.words}</span>
+              <span className="tile__label">{lex.duration.options[i].label}</span>
+              <span className="tile__sub">{lex.duration.options[i].sub}</span>
             </button>
           ))}
         </div>
@@ -184,19 +174,34 @@ export function Home({
 
       <div className="cta">
         <button className="btn btn--lg" onClick={onStart} disabled={busy}>
-          {busy ? "writing you something..." : "Begin"}
+          {busy ? lex.results.building : lex.cta.label}
         </button>
+
         {plan && !nextDrill && (
           <button className="btn btn--ghost" onClick={onOpenPlan}>
-            View plan
+            {lex.results.plan}
           </button>
         )}
+
         <span className="cta__hint">
           or press <span className="key">enter</span>
         </span>
+
+        <span className="cta__note">
+          {lex.cta.note.map((line, i) => (
+            <span key={i}>
+              {line}
+              {i < lex.cta.note.length - 1 && <br />}
+            </span>
+          ))}
+        </span>
       </div>
 
-      {error && <div className="notice notice--bad cta__error">{error}</div>}
+      {error && (
+        <div className="notice notice--bad" style={{ marginTop: "1.25rem" }}>
+          {error}
+        </div>
+      )}
 
       <footer className="footer">
         <label className="toggle">
@@ -205,7 +210,7 @@ export function Home({
             checked={config.sound_enabled}
             onChange={(e) => onChange({ sound_enabled: e.target.checked })}
           />
-          sound
+          {lex.footer.sound}
         </label>
         <label className="toggle">
           <input
@@ -215,10 +220,10 @@ export function Home({
               onChange({ cursor_mode: e.target.checked ? "block" : "advance" })
             }
           />
-          stop me on mistakes
+          {lex.footer.block}
         </label>
-        <span className="footer__note">finger analysis assumes QWERTY</span>
+        <span className="footer__note">{lex.footer.note}</span>
       </footer>
-    </div>
+    </Frame>
   );
 }

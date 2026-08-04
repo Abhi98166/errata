@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 
+import type { Lexicon } from "../lib/lexicon";
+
 const NEIGHBOURS: Record<string, string> = {
   a: "s",
   e: "w",
@@ -60,12 +62,12 @@ function splitIntoWords(text: string): { chars: string; start: number }[] {
 }
 
 interface Props {
-  label: string;
+  lex: Lexicon;
   text: string;
   still: boolean;
 }
 
-export function HeroSpecimen({ label, text, still }: Props) {
+export function HeroSpecimen({ lex, text, still }: Props) {
   const words = useMemo(() => splitIntoWords(text), [text]);
   const slips = useMemo(() => planSlips(text), [text]);
 
@@ -112,12 +114,14 @@ export function HeroSpecimen({ label, text, still }: Props) {
     return () => window.clearTimeout(timer);
   }, [text, still, slips]);
 
+  const notes = lex.specimen.note(slips.indices.size);
+
   return (
     <figure className="spec" aria-hidden="true">
       <figcaption className="spec__bar">
-        <span className="spec__dot" />
-        {label}
-        <span className="spec__meta">0:47</span>
+        <i className="spec__dot" />
+        {lex.specimen.label}
+        <span className="spec__clock">{lex.specimen.clock}</span>
       </figcaption>
 
       <p className="spec__line">
@@ -144,11 +148,34 @@ export function HeroSpecimen({ label, text, still }: Props) {
       </p>
 
       <div className={verdict ? "spec__verdict is-in" : "spec__verdict"}>
-        <span className="key key--error">{slips.typed}</span>
-        <span className="spec__arrow">for</span>
-        <span className="key">{slips.intended}</span>
+        {lex.specimen.prefix && (
+          <span className="spec__label" style={{ color: "var(--alarm)" }}>
+            {lex.specimen.prefix}
+          </span>
+        )}
+
+        {lex.specimen.prose ? (
+          <>
+            <span className="spec__pair" style={{ color: "var(--error)" }}>
+              {lex.specimen.prose(slips.typed, slips.intended)}
+            </span>
+            <span className="spec__label">{lex.specimen.instead}</span>
+          </>
+        ) : (
+          <>
+            <span className="key key--error">{slips.typed}</span>
+            <span className="spec__label">{lex.specimen.instead}</span>
+            <span className="key">{slips.intended}</span>
+          </>
+        )}
+
         <span className="spec__note">
-          {slips.indices.size}&times; this passage &middot; folded into your profile
+          {notes.map((line, i) => (
+            <span key={i}>
+              {line}
+              {i < notes.length - 1 && <br />}
+            </span>
+          ))}
         </span>
       </div>
     </figure>

@@ -134,3 +134,39 @@ class TestPlanShape:
             keys={"t": {"attempts": 500.0, "errors": 0.0, "error_rate": 0.0}}
         )
         assert plan_mod.build_findings(prof) == []
+
+class TestNearMisses:
+    def test_reports_a_confusion_that_fell_under_the_count_floor(self):
+        prof = profile_with(
+            confusion={"b>n": 2.0},
+            keys={"b": {"attempts": 200.0, "errors": 2.0, "error_rate": 0.01}},
+        )
+        (miss,) = plan_mod.find_near_misses(prof, [])
+
+        assert (miss.expected, miss.actual) == ("b", "n")
+        assert miss.reason == "count"
+
+    def test_reports_a_confusion_that_fell_under_the_attempts_floor(self):
+        prof = profile_with(
+            confusion={"z>x": 6.0},
+            keys={"z": {"attempts": 12.0, "errors": 6.0, "error_rate": 0.5}},
+        )
+        (miss,) = plan_mod.find_near_misses(prof, [])
+
+        assert miss.reason == "attempts"
+
+    def test_does_not_repeat_something_already_reported(self):
+        prof = profile_with(
+            confusion={"t>r": 20.0, "t>y": 2.0},
+            keys={"t": {"attempts": 200.0, "errors": 22.0, "error_rate": 0.11}},
+        )
+        findings = plan_mod.build_findings(prof)
+
+        assert plan_mod.find_near_misses(prof, findings) == []
+
+    def test_is_capped(self):
+        prof = profile_with(
+            confusion={f"{c}>x": 2.0 for c in "abcdefgh"},
+            keys={c: {"attempts": 200.0, "errors": 2.0} for c in "abcdefghx"},
+        )
+        assert len(plan_mod.find_near_misses(prof, [])) <= plan_mod.MAX_NEAR_MISSES
