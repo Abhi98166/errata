@@ -60,7 +60,7 @@ class TestMeta:
 
     def test_genres_are_listed(self, client):
         ids = [g["id"] for g in client.get("/api/genres").json()]
-        assert "comedic" in ids and len(ids) == 4
+        assert set(ids) == {"comedic", "horror", "romantic", "poetic", "technical"}
 
     def test_config_defaults_to_comedy_with_sound_off(self, client):
         config = client.get("/api/config", headers=HEADERS).json()

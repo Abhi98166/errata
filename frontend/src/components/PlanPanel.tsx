@@ -1,6 +1,9 @@
+import type { Lexicon } from "../lib/lexicon";
 import type { Drill, Plan } from "../lib/types";
+import { Frame } from "./Frame";
 
 interface Props {
+  lex: Lexicon;
   plan: Plan;
   busyDrillId: string | null;
   error: string | null;
@@ -13,6 +16,7 @@ function label(target: string): string {
 }
 
 export function PlanPanel({
+  lex,
   plan,
   busyDrillId,
   error,
@@ -22,67 +26,74 @@ export function PlanPanel({
   const passed = plan.drills.filter((d) => d.status === "passed").length;
 
   return (
-    <div className="stage stage--wide">
-      <p className="eyebrow">correction plan</p>
-      <h1>
-        {passed} of {plan.drills.length} cleared
-      </h1>
-      <p className="lede">
-        Each drill is a fresh passage built to be unusually full of the letters
-        you keep missing. It is judged only on those letters, not on your overall
-        accuracy.
-      </p>
+    <Frame variant="plan" left={lex.plan.label} right={lex.results.barRight}>
+      <div className="plan__head">
+        <h1 className="plan__title">
+          {lex.plan.cleared(passed, plan.drills.length)}
+        </h1>
+        <p className="plan__lede">{lex.plan.lede}</p>
+      </div>
 
-      {plan.drills.map((drill) => (
-        <div className="drill" key={drill.id}>
-          <div className="drill__rank">{drill.rank}</div>
-          <div className="drill__body">
-            <p className="finding__diagnosis">{drill.diagnosis}</p>
-            {drill.rationale && (
-              <p className="finding__rationale">{drill.rationale}</p>
-            )}
-            <div className="finding__targets">
-              {drill.targets.map((target) => (
-                <span key={target} className="key">
-                  {label(target)}
-                </span>
-              ))}
-            </div>
+      <div className="schedule">
+        {plan.drills.map((drill, i) => {
+          const done = drill.status === "passed";
+          return (
             <div
-              className={`drill__status${
-                drill.status === "passed" ? " drill__status--passed" : ""
-              }`}
+              className={`schedule__row schedule__row--${done ? "done" : i === 0 ? "now" : "next"}`}
+              key={drill.id}
             >
-              {drill.status === "passed"
-                ? `passed · ${drill.attempts} attempt${drill.attempts === 1 ? "" : "s"}`
-                : `needs ${Math.round(drill.pass_threshold * 100)}% on the target letters`}
+              <span className="schedule__n">
+                {lex.results.ordinals[i] ?? String(drill.rank)}
+              </span>
+
+              <div>
+                <div className="schedule__text">{drill.diagnosis}</div>
+                {drill.rationale && (
+                  <p className="finding__rationale" style={{ marginTop: "0.4rem" }}>
+                    {drill.rationale}
+                  </p>
+                )}
+                <div className="finding__targets" style={{ marginTop: "0.5rem" }}>
+                  {drill.targets.map((target) => (
+                    <span key={target} className="key">
+                      {label(target)}
+                    </span>
+                  ))}
+                </div>
+                <div className="schedule__state">
+                  {done
+                    ? lex.plan.passed(drill.attempts)
+                    : lex.plan.pending(`${Math.round(drill.pass_threshold * 100)}%`)}
+                </div>
+              </div>
+
+              <button
+                className="btn btn--ghost schedule__action"
+                onClick={() => onStartDrill(drill)}
+                disabled={busyDrillId !== null}
+              >
+                {busyDrillId === drill.id
+                  ? lex.plan.writing
+                  : done
+                    ? lex.plan.redo
+                    : lex.plan.practice}
+              </button>
             </div>
-          </div>
-          <button
-            className="btn btn--ghost"
-            onClick={() => onStartDrill(drill)}
-            disabled={busyDrillId !== null}
-          >
-            {busyDrillId === drill.id
-              ? "writing..."
-              : drill.status === "passed"
-                ? "Redo"
-                : "Practice"}
-          </button>
-        </div>
-      ))}
+          );
+        })}
+      </div>
 
       {error && (
-        <div className="notice notice--bad" style={{ marginTop: "1.5rem" }}>
+        <div className="notice notice--bad" style={{ marginTop: "1.25rem" }}>
           {error}
         </div>
       )}
 
-      <div className="row" style={{ marginTop: "2.5rem" }}>
+      <div className="row" style={{ marginTop: "1.5rem" }}>
         <button className="btn btn--ghost" onClick={onHome}>
-          Home
+          {lex.plan.home}
         </button>
       </div>
-    </div>
+    </Frame>
   );
 }

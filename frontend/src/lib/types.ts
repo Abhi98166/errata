@@ -67,6 +67,15 @@ export interface Finding {
   evidence: Record<string, unknown>;
 }
 
+export interface NearMiss {
+  pair: string;
+  expected: string;
+  actual: string;
+  count: number;
+  attempts: number;
+  reason: "count" | "attempts";
+}
+
 export interface DrillResult {
   drill_id: string;
   passed: boolean;
@@ -80,6 +89,7 @@ export interface SessionResult {
   session_id: string;
   analysis: Analysis;
   findings: Finding[];
+  near_misses: NearMiss[];
   profile: {
     sessions: number;
     total_keystrokes: number;

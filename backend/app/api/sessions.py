@@ -8,7 +8,13 @@ from app.analysis.analyse import Keystroke, analyse, target_accuracy
 from app.api.deps import current_user_id
 from app.db import get_db
 from app.models import Drill, Passage, Profile, TypingSession
-from app.schemas import DrillResultOut, FindingOut, SessionIn, SessionOut
+from app.schemas import (
+    DrillResultOut,
+    FindingOut,
+    NearMissOut,
+    SessionIn,
+    SessionOut,
+)
 
 router = APIRouter()
 
@@ -60,6 +66,7 @@ def submit_session(
     db.commit()
 
     findings = plan_mod.build_findings(updated)
+    near_misses = plan_mod.find_near_misses(updated, findings)
     can_plan = profile_mod.has_enough_evidence(updated) and bool(findings)
 
     return SessionOut(
@@ -73,6 +80,17 @@ def submit_session(
                 evidence=f.evidence,
             )
             for f in findings
+        ],
+        near_misses=[
+            NearMissOut(
+                pair=m.pair,
+                expected=m.expected,
+                actual=m.actual,
+                count=m.count,
+                attempts=m.attempts,
+                reason=m.reason,
+            )
+            for m in near_misses
         ],
         profile=_public_profile(updated),
         plan_available=can_plan,

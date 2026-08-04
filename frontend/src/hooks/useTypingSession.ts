@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { handFor, rowFor } from "../lib/keyboard";
 import { sound } from "../lib/sound";
 import type { Keystroke } from "../lib/types";
 
@@ -12,13 +13,53 @@ interface Options {
   onFinish: (keystrokes: Keystroke[]) => void;
 }
 
+export interface StreamEntry {
+  t: number;
+  key: string;
+  fault: boolean;
+}
+
+export interface Telemetry {
+  strokes: number;
+  meanMs: number;
+  lastMs: number;
+  left: number;
+  right: number;
+  home: number;
+  faults: number;
+  stream: StreamEntry[];
+}
+
 interface TypingSession {
   typed: string;
   status: TypingStatus;
   remaining: number;
+  telemetry: Telemetry;
 }
 
 const TICK_MS = 100;
+const STREAM_LENGTH = 5;
+const MAX_RHYTHM_INTERVAL_MS = 3000;
+
+interface Counters {
+  intervals: number[];
+  hands: { left: number; right: number };
+  rows: { home: number; counted: number };
+  faults: number;
+  stream: StreamEntry[];
+  lastAt: number | null;
+}
+
+function emptyCounters(): Counters {
+  return {
+    intervals: [],
+    hands: { left: 0, right: 0 },
+    rows: { home: 0, counted: 0 },
+    faults: 0,
+    stream: [],
+    lastAt: null,
+  };
+}
 
 export function useTypingSession({
   text,
@@ -29,9 +70,11 @@ export function useTypingSession({
   const [typed, setTyped] = useState("");
   const [status, setStatus] = useState<TypingStatus>("idle");
   const [remaining, setRemaining] = useState(durationS);
+  const [strokeCount, setStrokeCount] = useState(0);
 
   const typedRef = useRef("");
   const strokes = useRef<Keystroke[]>([]);
+  const counters = useRef<Counters>(emptyCounters());
   const startedAt = useRef<number | null>(null);
   const finished = useRef(false);
   const onFinishRef = useRef(onFinish);
@@ -41,11 +84,13 @@ export function useTypingSession({
   useEffect(() => {
     typedRef.current = "";
     strokes.current = [];
+    counters.current = emptyCounters();
     startedAt.current = null;
     finished.current = false;
     setTyped("");
     setStatus("idle");
     setRemaining(durationS);
+    setStrokeCount(0);
   }, [text, durationS]);
 
   const finish = useCallback(() => {
@@ -76,13 +121,15 @@ export function useTypingSession({
 
       const current = typedRef.current;
       const index = current.length;
+      const elapsed = Math.round(at - startedAt.current);
 
       strokes.current.push({
         seq: strokes.current.length,
-        t_ms: Math.round(at - startedAt.current),
+        t_ms: elapsed,
         key: event.key,
         index,
       });
+      setStrokeCount(strokes.current.length);
 
       if (isBackspace) {
         if (index === 0) return;
@@ -93,7 +140,32 @@ export function useTypingSession({
 
       if (index >= text.length) return;
 
-      const correct = event.key === text[index];
+      const expected = text[index];
+      const correct = event.key === expected;
+      const counter = counters.current;
+
+      if (counter.lastAt !== null) {
+        const gap = at - counter.lastAt;
+        if (gap >= 0 && gap <= MAX_RHYTHM_INTERVAL_MS) counter.intervals.push(gap);
+      }
+      counter.lastAt = at;
+
+      const hand = handFor(expected);
+      if (hand === "left") counter.hands.left += 1;
+      if (hand === "right") counter.hands.right += 1;
+
+      const row = rowFor(expected);
+      if (row !== null) {
+        counter.rows.counted += 1;
+        if (row === "home") counter.rows.home += 1;
+      }
+
+      if (!correct) counter.faults += 1;
+
+      counter.stream = [
+        ...counter.stream,
+        { t: elapsed, key: event.key, fault: !correct },
+      ].slice(-STREAM_LENGTH);
 
       if (!correct && cursorMode === "block") {
         sound.error();
@@ -127,5 +199,23 @@ export function useTypingSession({
     return () => window.clearInterval(id);
   }, [status, durationS, finish]);
 
-  return { typed, status, remaining };
+  const counter = counters.current;
+  const handTotal = counter.hands.left + counter.hands.right;
+
+  const telemetry: Telemetry = {
+    strokes: strokeCount,
+    meanMs: counter.intervals.length
+      ? counter.intervals.reduce((sum, ms) => sum + ms, 0) / counter.intervals.length
+      : 0,
+    lastMs: counter.intervals.at(-1) ?? 0,
+    left: handTotal ? (counter.hands.left / handTotal) * 100 : 0,
+    right: handTotal ? (counter.hands.right / handTotal) * 100 : 0,
+    home: counter.rows.counted
+      ? (counter.rows.home / counter.rows.counted) * 100
+      : 0,
+    faults: counter.faults,
+    stream: counter.stream,
+  };
+
+  return { typed, status, remaining, telemetry };
 }

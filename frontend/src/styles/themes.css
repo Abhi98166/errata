@@ -1,131 +1,575 @@
+:root,
+[data-genre="comedic"] {
+  --host: light;
 
-:root {
-  --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-mono: ui-monospace, "Cascadia Code", "SF Mono", Menlo, monospace;
+  --font-display: "Archivo Black", Archivo, system-ui, sans-serif;
+  --font-ui: Archivo, system-ui, sans-serif;
+  --font-label: Archivo, system-ui, sans-serif;
+  --font-passage: "Courier Prime", ui-monospace, Menlo, monospace;
+  --font-hand: "Courier Prime", ui-monospace, Menlo, monospace;
+  --font-ornament: "Archivo Black", Archivo, sans-serif;
+  --font-mono: "Courier Prime", ui-monospace, Menlo, monospace;
 
-  --radius: 10px;
-  --measure: 62ch;
+  --display-weight: 400;
+  --display-style: normal;
+  --display-transform: uppercase;
+  --display-tracking: -0.02em;
+  --display-leading: 0.96;
 
-  --bg: #fbf7ef;
-  --surface: #ffffff;
+  --label-font: var(--font-label);
+  --label-weight: 600;
+  --label-size: 0.6rem;
+  --label-tracking: 0.2em;
+  --label-transform: uppercase;
+
+  --bg: #f7f3e8;
+  --paper: #f7f3e8;
+  --surface: #fffdf6;
+  --surface-alt: #efe9da;
+  --bar-bg: #1a1714;
+  --bar-ink: #f7f3e8;
   --text: #1a1714;
-  --dim: #a9a096;
-  --faint: #d9d2c7;
+  --ink: #1a1714;
+  --dim: #8c7f6a;
+  --faint: #ddd3bc;
+  --rule: #b8ac93;
   --accent: #f0a202;
+  --accent-ink: #1a1714;
+  --alarm: #d93f2b;
   --correct: #1a1714;
-  --error: #c62828;
-  --error-bg: #fbe3e3;
+  --upcoming: #c9bda3;
+  --error: #d93f2b;
+  --error-bg: #fbe0da;
   --cursor: #f0a202;
 
-  --font-passage: var(--font-mono);
-  --passage-size: 1.375rem;
-  --passage-line: 2.1;
-  --passage-spacing: 0.01em;
+  --radius: 0px;
+  --border-w: 2px;
+  --border-color: #1a1714;
+  --panel-shadow: 8px 8px 0 #1a1714;
+  --card-shadow: 5px 5px 0 rgba(26, 23, 20, 0.16);
+
+  --btn-font: var(--font-display);
+  --btn-weight: 400;
+  --btn-transform: uppercase;
+  --btn-tracking: 0.02em;
+  --btn-bg: #f0a202;
+  --btn-ink: #1a1714;
+  --btn-border: 2px solid #1a1714;
+  --btn-shadow: 5px 5px 0 #1a1714;
+  --btn-radius: 0px;
+
+  --passage-size: 1.2rem;
+  --passage-line: 2.15;
+  --passage-spacing: 0.005em;
+  --measure: 64ch;
+
+  --cursor-w: 2.5px;
+  --cursor-shadow: none;
+  --cursor-anim: blink 1.05s steps(2, start) infinite;
 
   --transition: 140ms;
   --easing: cubic-bezier(0.2, 0.9, 0.3, 1);
-  --cursor-anim: blink 1.05s steps(2, start) infinite;
 
   --vignette: none;
-  --grain-opacity: 0;
+  --grain-opacity: 0.055;
+  --grain-freq: 0.9;
+  --scanlines: none;
+  --ruling: none;
+  --ruling-margin: none;
+  --candle: none;
+  --texture-anim: none;
 }
 
 [data-genre="horror"] {
+  --host: dark;
+
+  --font-display: "Special Elite", "Courier Prime", serif;
+  --font-ui: "Courier Prime", ui-monospace, monospace;
+  --font-label: "Courier Prime", ui-monospace, monospace;
+  --font-passage: "Courier Prime", ui-monospace, Menlo, monospace;
+  --font-hand: "Courier Prime", ui-monospace, monospace;
+  --font-ornament: "Special Elite", serif;
+  --font-mono: "Courier Prime", ui-monospace, Menlo, monospace;
+
+  --display-weight: 400;
+  --display-style: normal;
+  --display-transform: none;
+  --display-tracking: -0.01em;
+  --display-leading: 1.12;
+
+  --label-weight: 400;
+  --label-size: 0.6rem;
+  --label-tracking: 0.2em;
+  --label-transform: uppercase;
+
   --bg: #08090a;
+  --paper: #08090a;
   --surface: #101315;
+  --surface-alt: #0d1012;
+  --bar-bg: #0d1012;
+  --bar-ink: #8d9698;
   --text: #ced2cf;
-  --dim: #7c8588;
-  --faint: #2a3135;
-  --accent: #bf4038;
+  --ink: #eaeeea;
+  --dim: #4b5457;
+  --faint: #22282a;
+  --rule: #1b2123;
+  --accent: #cf4a3e;
+  --accent-ink: #eaeeea;
+  --alarm: #d1554c;
   --correct: #eaeeea;
+  --upcoming: #3d4548;
   --error: #d1554c;
   --error-bg: #2a1210;
   --cursor: #cf4a3e;
 
-  --passage-size: 1.3rem;
-  --passage-line: 2.3;
+  --radius: 0px;
+  --border-w: 1px;
+  --border-color: #22282a;
+  --panel-shadow: 0 40px 90px -40px #000;
+  --card-shadow: 0 40px 80px -30px #000, inset 0 0 60px rgba(0, 0, 0, 0.7);
+
+  --btn-font: var(--font-display);
+  --btn-weight: 400;
+  --btn-transform: none;
+  --btn-tracking: 0.06em;
+  --btn-bg: rgba(191, 64, 56, 0.1);
+  --btn-ink: #eaeeea;
+  --btn-border: 1px solid #cf4a3e;
+  --btn-shadow: 0 0 34px -6px rgba(191, 64, 56, 0.45),
+    inset 0 0 22px rgba(191, 64, 56, 0.12);
+  --btn-radius: 0px;
+
+  --passage-size: 1.2rem;
+  --passage-line: 2.5;
   --passage-spacing: 0.02em;
+  --measure: 56ch;
+
+  --cursor-w: 2px;
+  --cursor-shadow: 0 0 12px #cf4a3e;
+  --cursor-anim: candle 2.4s ease-in-out infinite;
 
   --transition: 420ms;
   --easing: cubic-bezier(0.4, 0, 0.2, 1);
-  --cursor-anim: pulse 2.4s ease-in-out infinite;
 
   --vignette: radial-gradient(
-    ellipse at center,
-    transparent 32%,
+    ellipse 80% 74% at 50% 50%,
+    transparent 40%,
     rgba(0, 0, 0, 0.82) 100%
   );
-  --grain-opacity: 0.05;
+  --vignette-typing: radial-gradient(
+    ellipse 62% 54% at 50% 52%,
+    transparent 30%,
+    rgba(0, 0, 0, 0.86) 100%
+  );
+  --grain-opacity: 0.07;
+  --grain-freq: 0.85;
+  --scanlines: none;
+  --ruling: none;
+  --ruling-margin: none;
+  --candle: none;
+  --texture-anim: candle 6s ease-in-out infinite;
 }
 
 [data-genre="romantic"] {
+  --host: light;
+
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-ui: "EB Garamond", Georgia, serif;
+  --font-label: Archivo, system-ui, sans-serif;
+  --font-passage: "EB Garamond", Georgia, serif;
+  --font-hand: Caveat, "Segoe Script", cursive;
+  --font-ornament: "Playfair Display", Georgia, serif;
+  --font-mono: "Courier Prime", ui-monospace, Menlo, monospace;
+
+  --display-weight: 600;
+  --display-style: normal;
+  --display-transform: none;
+  --display-tracking: -0.015em;
+  --display-leading: 1.14;
+
+  --label-weight: 400;
+  --label-size: 0.6rem;
+  --label-tracking: 0.2em;
+  --label-transform: uppercase;
+
   --bg: #fdf6f2;
+  --paper: #fdf6f2;
   --surface: #fffaf7;
+  --surface-alt: #f8ece6;
+  --bar-bg: #fffaf7;
+  --bar-ink: #b98d8a;
   --text: #3a2b2b;
-  --dim: #c7ada4;
-  --faint: #ecd9d1;
+  --ink: #3a2b2b;
+  --dim: #c09b93;
+  --faint: #f2e0d9;
+  --rule: #ecd9d1;
   --accent: #c26a72;
-  --correct: #2f2222;
+  --accent-ink: #fff8f5;
+  --alarm: #b3363f;
+  --correct: #3a2b2b;
+  --upcoming: #c7ada4;
   --error: #b3363f;
-  --error-bg: #f8e0e2;
+  --error-bg: transparent;
   --cursor: #c26a72;
 
-  --font-passage: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-  --passage-size: 1.5rem;
-  --passage-line: 2.0;
+  --radius: 2px;
+  --border-w: 1px;
+  --border-color: #ecd9d1;
+  --panel-shadow: 0 24px 50px -34px rgba(92, 43, 47, 0.5);
+  --card-shadow: 0 26px 44px -32px rgba(92, 43, 47, 0.55);
+
+  --btn-font: var(--font-display);
+  --btn-weight: 600;
+  --btn-transform: none;
+  --btn-tracking: 0;
+  --btn-bg: #c26a72;
+  --btn-ink: #fff8f5;
+  --btn-border: 1px solid #c26a72;
+  --btn-shadow: 0 16px 30px -18px rgba(194, 106, 114, 0.95);
+  --btn-radius: 2px;
+
+  --passage-size: 1.375rem;
+  --passage-line: 2.15;
   --passage-spacing: 0.005em;
+  --measure: 52ch;
+
+  --cursor-w: 2px;
+  --cursor-shadow: none;
+  --cursor-anim: blink 1.6s ease-in-out infinite;
 
   --transition: 300ms;
   --easing: cubic-bezier(0.33, 1, 0.68, 1);
-  --cursor-anim: blink 1.6s ease-in-out infinite;
 
   --vignette: none;
   --grain-opacity: 0;
+  --grain-freq: 0.9;
+  --scanlines: none;
+  --ruling: repeating-linear-gradient(
+    transparent 0 33px,
+    rgba(194, 106, 114, 0.13) 33px 34px
+  );
+  --ruling-margin: linear-gradient(rgba(194, 106, 114, 0.3), rgba(194, 106, 114, 0.3));
+  --candle: none;
+  --texture-anim: none;
 }
 
 [data-genre="poetic"] {
-  --bg: #14161a;
-  --surface: #1a1d22;
-  --text: #b6bcc6;
-  --dim: #4b525d;
-  --faint: #262b32;
-  --accent: #7f9bb5;
-  --correct: #e4e9f0;
-  --error: #d98a6a;
-  --error-bg: #2a1d16;
-  --cursor: #7f9bb5;
+  --host: light;
 
-  --font-passage: "Iowan Old Style", Georgia, "Times New Roman", serif;
-  --passage-size: 1.6rem;
-  --passage-line: 2.4;
-  --passage-spacing: 0.015em;
+  --font-display: "Sorts Mill Goudy", Georgia, serif;
+  --font-ui: "Sorts Mill Goudy", Georgia, serif;
+  --font-label: "Cormorant SC", Georgia, serif;
+  --font-passage: "Sorts Mill Goudy", Georgia, serif;
+  --font-hand: "Sorts Mill Goudy", Georgia, serif;
+  --font-ornament: UnifrakturMaguntia, "Sorts Mill Goudy", serif;
+  --font-mono: "Courier Prime", ui-monospace, Menlo, monospace;
+
+  --display-weight: 400;
+  --display-style: normal;
+  --display-transform: none;
+  --display-tracking: 0;
+  --display-leading: 1.16;
+
+  --label-weight: 600;
+  --label-size: 0.625rem;
+  --label-tracking: 0.22em;
+  --label-transform: uppercase;
+
+  --bg: #efe2c4;
+  --paper: #efe2c4;
+  --surface: #f6ebd0;
+  --surface-alt: #e6d7b4;
+  --bar-bg: #f6ebd0;
+  --bar-ink: #8c7449;
+  --text: #33210f;
+  --ink: #33210f;
+  --dim: #a8916a;
+  --faint: #ddcba4;
+  --rule: #cbb689;
+  --accent: #9d2f26;
+  --accent-ink: #fbf2dc;
+  --alarm: #9d2f26;
+  --correct: #33210f;
+  --upcoming: #a8916a;
+  --error: #9d2f26;
+  --error-bg: transparent;
+  --cursor: #9d2f26;
+
+  --radius: 0px;
+  --border-w: 1px;
+  --border-color: #cbb689;
+  --panel-shadow: 0 26px 54px -34px rgba(51, 33, 15, 0.6);
+  --card-shadow: 0 26px 44px -30px rgba(51, 33, 15, 0.7);
+
+  --btn-font: var(--font-display);
+  --btn-weight: 400;
+  --btn-transform: none;
+  --btn-tracking: 0.01em;
+  --btn-bg: #9d2f26;
+  --btn-ink: #fbf2dc;
+  --btn-border: 1px solid #6f1d17;
+  --btn-shadow: 0 14px 26px -16px rgba(51, 33, 15, 0.9),
+    inset 0 0 0 1px rgba(201, 164, 92, 0.6);
+  --btn-radius: 0px;
+
+  --passage-size: 1.3125rem;
+  --passage-line: 2.35;
+  --passage-spacing: 0.005em;
   --measure: 54ch;
+
+  --cursor-w: 2.5px;
+  --cursor-shadow: none;
+  --cursor-anim: candle 2.2s ease-in-out infinite;
 
   --transition: 260ms;
   --easing: cubic-bezier(0.4, 0, 0.2, 1);
-  --cursor-anim: blink 1.4s ease-in-out infinite;
 
-  --vignette: none;
-  --grain-opacity: 0.03;
+  --vignette: radial-gradient(
+    ellipse at center,
+    transparent 44%,
+    rgba(51, 33, 15, 0.34) 100%
+  );
+  --grain-opacity: 0.09;
+  --grain-freq: 0.7;
+  --scanlines: none;
+  --ruling: none;
+  --ruling-margin: none;
+  --candle: radial-gradient(
+    ellipse 44% 38% at 46% 32%,
+    rgba(255, 238, 196, 0.45) 0%,
+    transparent 62%
+  );
+  --texture-anim: candle 5.5s ease-in-out infinite;
+}
+
+[data-genre="technical"] {
+  --host: dark;
+
+  --font-display: "Chakra Petch", system-ui, sans-serif;
+  --font-ui: "IBM Plex Mono", ui-monospace, monospace;
+  --font-label: "IBM Plex Mono", ui-monospace, monospace;
+  --font-passage: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --font-hand: "IBM Plex Mono", ui-monospace, monospace;
+  --font-ornament: "Chakra Petch", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+
+  --display-weight: 700;
+  --display-style: normal;
+  --display-transform: uppercase;
+  --display-tracking: 0.005em;
+  --display-leading: 1.1;
+
+  --label-weight: 500;
+  --label-size: 0.6rem;
+  --label-tracking: 0.2em;
+  --label-transform: uppercase;
+
+  --bg: #05100f;
+  --paper: #05100f;
+  --surface: #071411;
+  --surface-alt: #050f0d;
+  --bar-bg: #081916;
+  --bar-ink: #6ff0d0;
+  --text: #7fb3a8;
+  --ink: #d8fff5;
+  --dim: #3f6b62;
+  --faint: #123a33;
+  --rule: #123a33;
+  --accent: #6ff0d0;
+  --accent-ink: #05100f;
+  --alarm: #ff9d3c;
+  --correct: #d8fff5;
+  --upcoming: #3f6b62;
+  --error: #ff9d3c;
+  --error-bg: rgba(255, 157, 60, 0.16);
+  --cursor: #6ff0d0;
+
+  --radius: 0px;
+  --border-w: 1px;
+  --border-color: #123a33;
+  --panel-shadow: 0 0 60px -20px rgba(111, 240, 208, 0.2);
+  --card-shadow: 0 0 60px -20px rgba(111, 240, 208, 0.3),
+    inset 0 0 40px rgba(0, 0, 0, 0.6);
+
+  --btn-font: var(--font-display);
+  --btn-weight: 700;
+  --btn-transform: uppercase;
+  --btn-tracking: 0.14em;
+  --btn-bg: rgba(111, 240, 208, 0.12);
+  --btn-ink: #d8fff5;
+  --btn-border: 1px solid #6ff0d0;
+  --btn-shadow: 0 0 32px -6px rgba(111, 240, 208, 0.55);
+  --btn-radius: 0px;
+
+  --passage-size: 1.125rem;
+  --passage-line: 2.25;
+  --passage-spacing: 0;
+  --measure: 52ch;
+
+  --cursor-w: 9px;
+  --cursor-shadow: 0 0 12px #6ff0d0;
+  --cursor-anim: blink 1.05s steps(2, start) infinite;
+
+  --transition: 90ms;
+  --easing: linear;
+
+  --vignette: radial-gradient(
+    ellipse at center,
+    transparent 54%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+  --grain-opacity: 0;
+  --grain-freq: 0.9;
+  --scanlines: repeating-linear-gradient(
+    rgba(111, 240, 208, 0.05) 0 1px,
+    transparent 1px 3px
+  );
+  --sweep-opacity: 1;
+  --ruling: none;
+  --ruling-margin: none;
+  --candle: none;
+  --texture-anim: none;
 }
 
 :root,
 [data-genre] {
-  --muted: color-mix(in srgb, var(--text) 68%, var(--bg));
+  --muted: color-mix(in srgb, var(--text) 74%, var(--bg));
+}
+
+/* Genre swatches for the picker: every card previews its own world, tinted
+   toward whichever paper it is currently sitting on. */
+.card[data-card="comedic"] {
+  --card-bg: #f6ebd0;
+  --card-ink: #1a1714;
+  --card-accent: #a8823f;
+  --card-dim: #6b573a;
+  --card-rule: #ddcba4;
+  --card-font: Archivo, sans-serif;
+  --card-weight: 700;
+  --card-transform: uppercase;
+  --card-size: 0.72rem;
+  --card-style: normal;
+  --card-tracking: 0;
+  --card-aa: "Courier Prime", monospace;
+}
+
+.card[data-card="horror"] {
+  --card-bg: #1c1a17;
+  --card-ink: #e6e9e6;
+  --card-accent: #cf4a3e;
+  --card-dim: #9aa2a2;
+  --card-rule: #3a4042;
+  --card-font: "Special Elite", serif;
+  --card-weight: 400;
+  --card-transform: none;
+  --card-size: 0.8rem;
+  --card-style: normal;
+  --card-tracking: 0;
+  --card-aa: "Special Elite", serif;
+}
+
+.card[data-card="romantic"] {
+  --card-bg: #f7e9e2;
+  --card-ink: #5c2b2f;
+  --card-accent: #c26a72;
+  --card-dim: #8a6a66;
+  --card-rule: #e6cec5;
+  --card-font: "Playfair Display", serif;
+  --card-weight: 700;
+  --card-transform: none;
+  --card-size: 0.82rem;
+  --card-style: italic;
+  --card-tracking: 0;
+  --card-aa: "EB Garamond", serif;
+}
+
+.card[data-card="poetic"] {
+  --card-bg: #f3e6c8;
+  --card-ink: #4a2d13;
+  --card-accent: #9d2f26;
+  --card-dim: #6b573a;
+  --card-rule: #ddcba4;
+  --card-font: "Cormorant SC", serif;
+  --card-weight: 600;
+  --card-transform: none;
+  --card-size: 0.76rem;
+  --card-style: normal;
+  --card-tracking: 0.06em;
+  --card-aa: "Sorts Mill Goudy", serif;
+}
+
+.card[data-card="technical"] {
+  --card-bg: #0b1b19;
+  --card-ink: #6ff0d0;
+  --card-accent: #6ff0d0;
+  --card-dim: #6c9a91;
+  --card-rule: #1c4a43;
+  --card-font: "Chakra Petch", sans-serif;
+  --card-weight: 600;
+  --card-transform: uppercase;
+  --card-size: 0.7rem;
+  --card-style: normal;
+  --card-tracking: 0.12em;
+  --card-aa: "IBM Plex Mono", monospace;
+}
+
+[data-genre="comedic"] .card[data-card="comedic"],
+[data-genre="romantic"] .card[data-card="romantic"],
+[data-genre="poetic"] .card[data-card="poetic"] {
+  --card-bg: var(--surface);
+}
+
+[data-genre="horror"] .card[data-card="comedic"],
+[data-genre="technical"] .card[data-card="comedic"] {
+  --card-bg: #100e08;
+  --card-ink: #f0a202;
+  --card-dim: #6b6455;
+  --card-rule: #2a2416;
+  --card-accent: #f0a202;
+}
+
+[data-genre="horror"] .card[data-card="horror"],
+[data-genre="technical"] .card[data-card="horror"] {
+  --card-bg: #0a0b0c;
+  --card-ink: #ced2cf;
+  --card-dim: #5f6a6c;
+  --card-rule: #22282a;
+}
+
+[data-genre="horror"] .card[data-card="romantic"],
+[data-genre="technical"] .card[data-card="romantic"] {
+  --card-bg: #140f0e;
+  --card-ink: #c26a72;
+  --card-dim: #6b5b58;
+  --card-rule: #2a1f1e;
+}
+
+[data-genre="horror"] .card[data-card="poetic"],
+[data-genre="technical"] .card[data-card="poetic"] {
+  --card-bg: #12100a;
+  --card-ink: #c9a45c;
+  --card-dim: #6a6152;
+  --card-rule: #2b2517;
+}
+
+[data-genre="horror"] .card[data-card="technical"],
+[data-genre="technical"] .card[data-card="technical"] {
+  --card-bg: #06100f;
+  --card-ink: #6ff0d0;
+  --card-dim: #4e7f74;
+  --card-rule: #133b34;
 }
 
 @media (prefers-reduced-motion: reduce) {
   :root {
     --transition: 0ms;
     --cursor-anim: none;
-    --vignette: none;
-    --grain-opacity: 0;
+    --texture-anim: none;
   }
 }
 
 [data-reduced-motion="true"] {
   --transition: 0ms;
   --cursor-anim: none;
-  --vignette: none;
-  --grain-opacity: 0;
+  --texture-anim: none;
 }

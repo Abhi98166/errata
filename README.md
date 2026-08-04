@@ -3,8 +3,12 @@
 A typing app that cares less about your WPM and more about *which* keys you keep
 getting wrong.
 
-Pick a mood and a duration. An LLM writes you a passage in that voice, and the
-whole app -- palette, type, motion, sound -- shifts to match. You type it, you
+Pick one of five moods -- comedic, horror, romantic, poetic, technical -- and a
+duration. An LLM writes you a passage in that voice, and the whole app becomes
+that thing: palette, typeface, texture, copy, motion and sound. A carbon-copy
+incident form. A house that is watching you type. A letter you are not sure you
+should send. A scriptorium folio with scribal correction marks. A ship's log
+three days stale. You type it, you
 make mistakes, and every mistake is recorded at keystroke granularity, folded
 into a rolling error profile, and turned into a **correction plan**: drills built
 from passages deliberately saturated with the exact letters you keep fumbling.
@@ -37,7 +41,7 @@ offline. Add `ERRATA_GEMINI_API_KEY` to `.env` for real generated prose.
 With the venv active:
 
 ```bash
-cd backend && python -m pytest    # 63 tests
+cd backend && python -m pytest    # 67 tests
 cd frontend && npm run build      # typecheck + build
 ```
 
@@ -70,8 +74,10 @@ backend/app/
   api/                 thin FastAPI routes
 
 frontend/src/
-  hooks/useTypingSession.ts     the keydown path
+  hooks/useTypingSession.ts     the keydown path, plus live telemetry
   components/TypingSurface.tsx  memoised per-word rendering
+  components/Frame.tsx          the panel every screen is drawn inside
+  lib/lexicon.ts                every per-genre string and surface variant
   styles/themes.css             one custom-property block per genre
   lib/sound.ts                  synthesised per-genre keypress audio
 ```
@@ -87,7 +93,10 @@ and does the two things it is good at: writing the coaching narrative and
 generating drill text. Both of its outputs are validated before a user sees them.
 
 **Genres are data, not branches.** Nothing switches on a genre id. A new genre
-is one entry in `genres.py` and one block in `themes.css`.
+is one entry in `genres.py`, one entry in `lexicon.ts` and one block in
+`themes.css`. That covers its voice, its whole palette and type system, its copy
+on all four screens, and whether its typing surface carries a drop cap, a
+marginal hand or a telemetry gutter.
 
 **Typeability is enforced in code, never by the prompt.** Models emit smart
 quotes, em dashes and accents constantly and none of them exist on a keyboard.

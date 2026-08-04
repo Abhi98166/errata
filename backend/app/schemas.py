@@ -61,6 +61,15 @@ class FindingOut(BaseModel):
     evidence: dict
 
 
+class NearMissOut(BaseModel):
+    pair: str
+    expected: str
+    actual: str
+    count: float
+    attempts: float
+    reason: Literal["count", "attempts"]
+
+
 class DrillResultOut(BaseModel):
     drill_id: str
     passed: bool
@@ -74,6 +83,7 @@ class SessionOut(BaseModel):
     session_id: str
     analysis: dict
     findings: list[FindingOut]
+    near_misses: list[NearMissOut] = []
     profile: dict
     plan_available: bool
     drill_result: DrillResultOut | None = None

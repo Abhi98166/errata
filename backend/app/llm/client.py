@@ -105,6 +105,15 @@ class StubLLMClient:
         "centre, always with a small sound like a held breath let go. You never "
         "mentioned it. Years later it is the thing you remember first, before "
         "the house, before the year, before any of the rest of it.",
+        "The river keeps a ledger of everything it has carried and the willow, "
+        "leaning in, signs for none of it. Salt in the wind, a bell three fields "
+        "off, the light arriving the way a hand arrives on a shoulder. Nothing is "
+        "explained. The field does not explain itself to the crow, and the crow "
+        "eats regardless.",
+        "The log says the crew is fine. The log is three days old and signed in a "
+        "hand that does not match the roster. Hull temperature on the port side "
+        "has risen every day since Tuesday. Nobody has reported it, and the "
+        "maintenance queue is empty for the first time in four years.",
     ]
 
     def complete(

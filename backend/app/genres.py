@@ -66,6 +66,21 @@ GENRES: dict[str, Genre] = {
         ),
         punctuation_risks=("line breaks", "em dashes", "stanza spacing"),
     ),
+    "technical": Genre(
+        id="technical",
+        label="Technical",
+        blurb="The log says the crew is fine. The log is three days old.",
+        voice=(
+            "Write cold procedural science fiction in the register of a ship's log "
+            "or an incident record. Impersonal, present tense, plain declarative "
+            "sentences. Report readings, timings, hardware and routine maintenance "
+            "as flat fact, and let the dread sit in the gap between what is "
+            "measured and what the log claims. No technobabble, no invented units, "
+            "no exclamation, no character interiority, and no ending that explains "
+            "what any of it meant."
+        ),
+        punctuation_risks=("slashes", "acronyms", "unit symbols", "digits"),
+    ),
 }
 
 DEFAULT_GENRE = "comedic"

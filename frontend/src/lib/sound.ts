@@ -11,6 +11,7 @@ const SPECS: Record<string, SoundSpec> = {
   horror: { freq: 150, decay: 0.13, spread: 0.1, wave: "sine", errorFreq: 72 },
   romantic: { freq: 780, decay: 0.09, spread: 0.14, wave: "sine", errorFreq: 300 },
   poetic: { freq: 440, decay: 0.12, spread: 0.3, wave: "sine", errorFreq: 210 },
+  technical: { freq: 880, decay: 0.03, spread: 0.04, wave: "square", errorFreq: 120 },
 };
 
 const FALLBACK = SPECS.comedic;
