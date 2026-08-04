@@ -35,6 +35,7 @@ interface TypingSession {
   status: TypingStatus;
   remaining: number;
   telemetry: Telemetry;
+  scars: ReadonlySet<number>;
 }
 
 const TICK_MS = 100;
@@ -46,6 +47,7 @@ interface Counters {
   hands: { left: number; right: number };
   rows: { home: number; counted: number };
   faults: number;
+  scars: Set<number>;
   stream: StreamEntry[];
   lastAt: number | null;
 }
@@ -56,6 +58,7 @@ function emptyCounters(): Counters {
     hands: { left: 0, right: 0 },
     rows: { home: 0, counted: 0 },
     faults: 0,
+    scars: new Set(),
     stream: [],
     lastAt: null,
   };
@@ -160,7 +163,10 @@ export function useTypingSession({
         if (row === "home") counter.rows.home += 1;
       }
 
-      if (!correct) counter.faults += 1;
+      if (!correct) {
+        counter.faults += 1;
+        counter.scars.add(index);
+      }
 
       counter.stream = [
         ...counter.stream,
@@ -217,5 +223,5 @@ export function useTypingSession({
     stream: counter.stream,
   };
 
-  return { typed, status, remaining, telemetry };
+  return { typed, status, remaining, telemetry, scars: counter.scars };
 }

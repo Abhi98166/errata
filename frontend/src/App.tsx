@@ -8,6 +8,7 @@ import { TypingSurface } from "./components/TypingSurface";
 import { api } from "./lib/api";
 import { lexiconFor } from "./lib/lexicon";
 import { sound } from "./lib/sound";
+import { GenreContext } from "./lib/theme";
 import type {
   Drill,
   Genre,
@@ -152,70 +153,72 @@ export function App() {
   }, []);
 
   return (
-    <div className="app">
-      <div className="effects" aria-hidden="true">
-        <div className="effects__vignette" />
-        <div className="effects__grain" />
-        <div className="effects__scan" />
-        <div className="effects__sweep" />
+    <GenreContext.Provider value={activeTheme}>
+      <div className="app">
+        <div className="effects" aria-hidden="true">
+          <div className="effects__vignette" />
+          <div className="effects__grain" />
+          <div className="effects__scan" />
+          <div className="effects__sweep" />
+        </div>
+
+        {screen.name === "loading" && <div className="frame" />}
+
+        {screen.name === "home" && (
+          <Home
+            lex={lex}
+            genres={genres}
+            config={config}
+            plan={plan}
+            busy={busy}
+            error={error}
+            onChange={updateConfig}
+            onStart={() => void start()}
+            onOpenPlan={() => setScreen({ name: "plan" })}
+          />
+        )}
+
+        {screen.name === "generating" && (
+          <Generating lex={lex} durationS={config.duration} />
+        )}
+
+        {screen.name === "typing" && (
+          <TypingSurface
+            key={screen.passage.id}
+            lex={lex}
+            text={screen.passage.text}
+            durationS={config.duration}
+            cursorMode={config.cursor_mode}
+            onFinish={(keystrokes) =>
+              void finishSession(screen.passage, screen.drill, keystrokes)
+            }
+          />
+        )}
+
+        {screen.name === "results" && (
+          <Results
+            lex={lex}
+            result={screen.result}
+            plan={plan}
+            busy={busy}
+            onAgain={() => void start()}
+            onHome={goHome}
+            onBuildPlan={() => void buildPlan()}
+            onOpenPlan={() => setScreen({ name: "plan" })}
+          />
+        )}
+
+        {screen.name === "plan" && plan && (
+          <PlanPanel
+            lex={lex}
+            plan={plan}
+            busyDrillId={busyDrillId}
+            error={error}
+            onStartDrill={(drill) => void startDrill(drill)}
+            onHome={goHome}
+          />
+        )}
       </div>
-
-      {screen.name === "loading" && <div className="frame" />}
-
-      {screen.name === "home" && (
-        <Home
-          lex={lex}
-          genres={genres}
-          config={config}
-          plan={plan}
-          busy={busy}
-          error={error}
-          onChange={updateConfig}
-          onStart={() => void start()}
-          onOpenPlan={() => setScreen({ name: "plan" })}
-        />
-      )}
-
-      {screen.name === "generating" && (
-        <Generating lex={lex} durationS={config.duration} />
-      )}
-
-      {screen.name === "typing" && (
-        <TypingSurface
-          key={screen.passage.id}
-          lex={lex}
-          text={screen.passage.text}
-          durationS={config.duration}
-          cursorMode={config.cursor_mode}
-          onFinish={(keystrokes) =>
-            void finishSession(screen.passage, screen.drill, keystrokes)
-          }
-        />
-      )}
-
-      {screen.name === "results" && (
-        <Results
-          lex={lex}
-          result={screen.result}
-          plan={plan}
-          busy={busy}
-          onAgain={() => void start()}
-          onHome={goHome}
-          onBuildPlan={() => void buildPlan()}
-          onOpenPlan={() => setScreen({ name: "plan" })}
-        />
-      )}
-
-      {screen.name === "plan" && plan && (
-        <PlanPanel
-          lex={lex}
-          plan={plan}
-          busyDrillId={busyDrillId}
-          error={error}
-          onStartDrill={(drill) => void startDrill(drill)}
-          onHome={goHome}
-        />
-      )}
-    </div>
+    </GenreContext.Provider>
   );
 }

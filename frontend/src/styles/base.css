@@ -168,6 +168,13 @@ button {
   background-image: var(--vignette-typing, var(--vignette-panel, none));
 }
 
+.atmos {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
 .frame__margin {
   position: absolute;
   top: 0;
@@ -1281,6 +1288,38 @@ button {
   text-shadow: 0 0 14px rgba(255, 157, 60, 0.6);
 }
 
+/* Deliberate: the mark outlives the correction, for the rest of the run. */
+.ch--scar {
+  text-decoration: underline dotted var(--error);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.ch--scar.ch--space {
+  text-decoration: none;
+}
+
+[data-genre="horror"] .ch--scar {
+  text-decoration: none;
+  box-shadow: 0 3px 0 -2px var(--error);
+  text-shadow: 0 0 12px rgba(209, 85, 76, 0.32);
+}
+
+[data-genre="romantic"] .ch--scar {
+  text-decoration: none;
+  box-shadow: 0 2px 0 -1px rgba(179, 54, 63, 0.4);
+}
+
+[data-genre="poetic"] .ch--scar {
+  text-decoration: none;
+  box-shadow: 0 4px 0 -3px var(--error);
+}
+
+[data-genre="technical"] .ch--scar {
+  text-decoration: none;
+  box-shadow: 0 2px 0 -1px rgba(255, 157, 60, 0.5);
+}
+
 .ch--cursor::before {
   content: "";
   position: absolute;
@@ -1739,11 +1778,157 @@ button {
   }
 }
 
+@keyframes omFall {
+  0% {
+    transform: translateY(-14%);
+  }
+  100% {
+    transform: translateY(118%);
+  }
+}
+
+@keyframes omSway {
+  0%,
+  100% {
+    transform: translateX(-16px) rotate(-28deg);
+  }
+  50% {
+    transform: translateX(16px) rotate(26deg);
+  }
+}
+
+@keyframes omMist {
+  0% {
+    transform: translate(-6%, 4%) scale(1);
+    opacity: 0;
+  }
+  22% {
+    opacity: 0.6;
+  }
+  78% {
+    opacity: 0.42;
+  }
+  100% {
+    transform: translate(14%, -8%) scale(1.32);
+    opacity: 0;
+  }
+}
+
+@keyframes omDrip {
+  0% {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  6% {
+    opacity: 1;
+  }
+  62% {
+    transform: scaleY(1);
+  }
+  92% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleY(1);
+    opacity: 0;
+  }
+}
+
+@keyframes omBead {
+  0%,
+  14% {
+    transform: translateY(0) scale(0.5);
+    opacity: 0;
+  }
+  24% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    transform: translateY(300px) scale(0.75);
+    opacity: 0;
+  }
+}
+
+@keyframes omMote {
+  0% {
+    transform: translate(0, 24px);
+    opacity: 0;
+  }
+  18% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(26px, -190px);
+    opacity: 0;
+  }
+}
+
+@keyframes omRain {
+  0% {
+    transform: translateY(-140px);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateY(560px);
+    opacity: 0;
+  }
+}
+
+@keyframes omGlow {
+  0%,
+  100% {
+    opacity: 0.32;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.72;
+    transform: scale(1.09);
+  }
+}
+
+@keyframes omGlitch {
+  0%,
+  90%,
+  100% {
+    opacity: 0;
+  }
+  91% {
+    opacity: 0.45;
+    transform: translateX(-7px);
+  }
+  94% {
+    opacity: 0.28;
+    transform: translateX(6px);
+  }
+  96.5% {
+    opacity: 0.5;
+    transform: translateX(-3px);
+  }
+}
+
+@keyframes omSweep {
+  0% {
+    transform: translateY(-40%);
+  }
+  100% {
+    transform: translateY(760%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     animation: none !important;
+  }
+
+  .atmos {
+    display: none;
   }
 }
 
@@ -1751,6 +1936,10 @@ button {
 [data-reduced-motion="true"] *::before,
 [data-reduced-motion="true"] *::after {
   animation: none !important;
+}
+
+[data-reduced-motion="true"] .atmos {
+  display: none;
 }
 
 /* ------------------------------------------------------------ responsive */

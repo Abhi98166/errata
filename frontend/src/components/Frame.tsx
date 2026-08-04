@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 
+import { Atmosphere } from "./Atmosphere";
+
 interface Props {
   variant: string;
   left: ReactNode;
@@ -14,6 +16,7 @@ export function Frame({ variant, left, right, children }: Props) {
       <div className="frame__glow" aria-hidden="true" />
       <div className="frame__margin" aria-hidden="true" />
       <div className="frame__vignette" aria-hidden="true" />
+      <Atmosphere />
 
       <div className="frame__bar">
         <span>{left}</span>

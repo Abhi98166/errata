@@ -22,10 +22,12 @@ const Word = memo(function Word({
   chars,
   typedSlice,
   cursorOffset,
+  scarMask,
 }: {
   chars: string;
   typedSlice: string;
   cursorOffset: number;
+  scarMask: string;
 }) {
   return (
     <span className="word">
@@ -37,6 +39,7 @@ const Word = memo(function Word({
         const classes = ["ch"];
 
         if (attempt !== undefined) classes.push(wrong ? "ch--wrong" : "ch--correct");
+        if (!wrong && scarMask[i] === "1") classes.push("ch--scar");
         if (shown === " ") classes.push("ch--space");
         if (i === cursorOffset) classes.push("ch--cursor");
 
@@ -167,7 +170,7 @@ export function TypingSurface({
   cursorMode,
   onFinish,
 }: Props) {
-  const { typed, status, remaining, telemetry } = useTypingSession({
+  const { typed, status, remaining, telemetry, scars } = useTypingSession({
     text,
     durationS,
     cursorMode,
@@ -240,6 +243,9 @@ export function TypingSurface({
                 chars={word.chars}
                 typedSlice={typed.slice(start, end)}
                 cursorOffset={inThisWord ? cursor - start : -1}
+                scarMask={Array.from(word.chars, (_, i) =>
+                  scars.has(start + i) ? "1" : "0",
+                ).join("")}
               />
             );
           })}
